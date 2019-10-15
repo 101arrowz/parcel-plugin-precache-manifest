@@ -1,0 +1,20 @@
+{
+  "name": "parcel-plugin-precache-manifest",
+  "version": "1.0.2",
+  "description": "A simple Parcel plugin that generates a precache manifest that can be imported by service workers",
+  "main": "index.js",
+  "author": "Arjun Barrett",
+  "license": "MIT",
+  "keywords": [
+    "pwa",
+    "parcel-bundler",
+    "service-worker"
+  ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/101arrowz/parcel-plugin-pwa-manifest.git"
+  },
+  "peerDependencies": {
+    "parcel-bundler": "^1.12.3"
+  }
+}
