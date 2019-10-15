@@ -1,5 +1,5 @@
-# parcel-plugin-pwa-manifest
-A simple Parcel plugin that generates a PWA manifest that can be imported by service workers
+# parcel-plugin-precache-manifest
+A simple Parcel plugin that generates a precache manifest that can be imported by service workers
 
 ## Usage
 
@@ -11,7 +11,7 @@ In `service-worker.js`:
 importScripts('/myFilename.js'); // path depends on publicUrl param given to Parcel 
 
 self.addEventListener("install", e => {
-  // Array containing URLs of everything in the bundle is added to global scope of service worker in pwa-manifest.js
+  // Array containing URLs of everything in the bundle is added to global scope of service worker in precache-manifest.js
   e.waitUntil(() =>
     caches.open("v1").then(cache => cache.addAll(myVariableName))
   );
