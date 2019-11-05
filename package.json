@@ -1,6 +1,6 @@
 {
   "name": "parcel-plugin-precache-manifest",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple Parcel plugin that generates a precache manifest that can be imported by service workers",
   "main": "index.js",
   "author": "Arjun Barrett",
