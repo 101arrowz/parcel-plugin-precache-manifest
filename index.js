@@ -1,7 +1,8 @@
 const { writeFileSync } = require('fs');
 const { join, relative, sep } = require('path');
 module.exports = bundler => {
-  const { publicURL, outDir } = bundler.options;
+  const { publicURL, outDir, target } = bundler.options;
+  if (target !== 'browser' || process.env.DISABLE_PRECACHE_MANIFEST) return;
   if (!publicURL.endsWith('/'))
     publicURL += '/';
   const getOptions = (entryAsset) => (typeof entryAsset.getPackage === 'function' ? entryAsset.getPackage() : Promise.resolve(entryAsset.package)).then(pkg => pkg['precacheManifest'] || pkg['precache-manifest'] || {});
