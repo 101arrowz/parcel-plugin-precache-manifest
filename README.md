@@ -3,7 +3,17 @@ A simple Parcel plugin that generates a precache manifest that can be imported b
 
 ## Usage
 
-The filename defaults to `precache-manifest.js` and the variable name defaults to `filesToCache`. However, you can customize this in `package.json`.
+The plugin generates a file similar to the following:
+```js
+self.__precacheManifest = {
+  "files": ["/index.html", "/client.33316f76.js", "/sw.js"],
+  "ver": "a2eeefb1213a80f101f9d6f8687f5007"
+}
+```
+
+The `files` key is a list of files to cache (paths depend on publicURL given to Parcel). `ver` is a hash of the build and will change itself if you ever update your app. It's useful for purging old cache when updating the client from a service worker.
+
+The filename defaults to `precache-manifest.js` and the variable name defaults to `__precacheManifest` (like Workbox-based systems). However, you can customize this in `package.json`.
 
 In `service-worker.js`:
 
@@ -12,9 +22,7 @@ importScripts('/myFilename.js'); // path depends on publicUrl param given to Par
 
 self.addEventListener("install", e => {
   // Array containing URLs of everything in the bundle is added to global scope of service worker in precache-manifest.js
-  e.waitUntil(() =>
-    caches.open("v1").then(cache => cache.addAll(myVariableName))
-  );
+  e.waitUntil(caches.open(myVariableName.ver).then(cache => cache.addAll(myVariableName.files)));
 });
 ```
 
@@ -35,12 +43,9 @@ In `service-worker.js`:
 
 ```javascript
 self.addEventListener("install", e => {
-  e.waitUntil(() =>
-    caches.open("v1").then(cache =>
-      fetch("/precache-manifest.json", { cache: "no-store" })
-        .then(res => res.json())
-        .then(filesToCache => cache.addAll(filesToCache))
-    )
+  e.waitUntil(fetch("/precache-manifest.json", { cache: "no-store" })
+    .then(res => res.json())
+    .then(manifest => caches.open(manifest.ver).then(cache => cache.addAll(manifest.files)))
   );
 });
 ```
