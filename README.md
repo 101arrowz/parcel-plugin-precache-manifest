@@ -11,6 +11,8 @@ self.__precacheManifest = {
 }
 ```
 
+All parameters have aliases. If you see inconsistencies in these docs, it's probably fine; you can use multiple names for one value.
+
 The `files` key is a list of files to cache (paths depend on publicURL given to Parcel). `ver` is a hash of the build and will change itself if you ever update your app. It's useful for purging old cache when updating the client from a service worker.
 
 The filename defaults to `precache-manifest.js` and the variable name defaults to `__precacheManifest` (like Workbox-based systems). However, you can customize this in `package.json`.
@@ -37,7 +39,7 @@ In `package.json`:
 }
 ```
 
-If you're want to completely guarantee that you don't use an old version of the manifest when updating your service worker, you can't (yet) use `importScripts`. However, you can set the option `asJSON` to `true` in `package.json` and make a `fetch` call instead. This has the added benefit of not adding an extra variable to the global scope. `asJSON` changes the default filename to `precache-manifest.json`, and the `variableName` parameter becomes ignored.
+If you're want to completely guarantee that you don't use an old version of the manifest when updating your service worker, you can't (yet) use `importScripts`. However, you can set the option `asJSON` to `true` in `package.json` and make a `fetch` call instead. This has the added benefit of not adding an extra variable to the global scope. `asJSON` changes the default filename to `precache-manifest.json`, and the `variableName` parameter is no longer allowed.
 
 In `service-worker.js`:
 
@@ -58,6 +60,25 @@ In `package.json`:
   }
 }
 ```
+
+Possibly the ultimate solution is to use the `"inject"` mode. It inserts the manifest at the top of the service worker, eliminating a need for an `"importScripts"` call. It's actually quite similar to Workbox Build inject mode. You provide either the filename for the service worker in the out directory or just `true` to automatically detect the SW.
+
+In `service-worker.js`:
+```javascript
+self.addEventListener("install", e => {
+  caches.open(__precacheManifest.ver).then(cache => cache.addAll(__precacheManifest.files));
+});
+```
+
+In `package.json`:
+```json
+{
+  "precacheManifest": {
+    "inject": true
+  }
+}
+```
+
 
 ## License
 MIT
