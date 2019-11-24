@@ -75,7 +75,7 @@ module.exports = bundler => {
     const data = asJSON ? stringManifest : `self["${variableName}"]=${stringManifest};`;
     if (inject === 'auto')
       return err('Auto-detection of service worker for injection failed: ould not find a service worker with name sw.js, serviceWorker.js, or service-worker.js.');
-    else if (inject !== 'none') writeFileSync(inject, data+'\n'+(readFileSync(inject).toString().replace(new RegExp(`self\\["${variableName}"\\]=(.*?);$`, "g"), '')));
+    else if (inject !== 'none') writeFileSync(inject, data+'\n'+(readFileSync(inject).toString().replace(new RegExp(`self\\["${variableName}"\\]=(.*?);\n`, "g"), '')));
     else writeFileSync(resolve(outDir, filename), data);
   })
 }
