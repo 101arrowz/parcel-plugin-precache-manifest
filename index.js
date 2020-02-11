@@ -16,7 +16,7 @@ module.exports = bundler => {
     logger.error('Precache manifest creation failed! ' + msg);
   }
   bundler.on('bundled', async bundle => {
-    const pkg = await getPkg(bundle.entryAsset);
+    const pkg = await getPkg(bundle.entryAsset || bundle.childBundles.values().next().value.entryAsset);
     const opts = pkg.precacheManifest || pkg['precache-manifest'] || {};
     let inject = opts.injectInto || opts['inject-into'] || opts.inject || opts.sw;
     if (typeof inject !== 'undefined') {
@@ -74,7 +74,7 @@ module.exports = bundler => {
     const stringManifest = JSON.stringify(manifest);
     const data = asJSON ? stringManifest : `self["${variableName}"]=${stringManifest};`;
     if (inject === 'auto')
-      return err('Auto-detection of service worker for injection failed: ould not find a service worker with name sw.js, serviceWorker.js, or service-worker.js.');
+      return err('Auto-detection of service worker for injection failed: could not find a service worker with name sw.js, serviceWorker.js, or service-worker.js.');
     else if (inject !== 'none') writeFileSync(inject, data+'\n'+(readFileSync(inject).toString().replace(new RegExp(`self\\["${variableName}"\\]=(.*?);\n`, "g"), '')));
     else writeFileSync(resolve(outDir, filename), data);
   })
